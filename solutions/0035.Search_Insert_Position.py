@@ -32,7 +32,17 @@ from typing import List
 
 class Solution:
     def searchInsert(self, nums: List[int], target: int) -> int:
-        pass  # todo: binary search for O(n) solution
+        left, right = 0, len(nums) - 1
+        while left <= right:
+            mid_index = (left + right) // 2
+            mid_num = nums[mid_index]
+            if mid_num >= target:
+                return mid_index
+            elif mid_num > target:
+                right = mid_index - 1
+            else:
+                left = mid_index + 1
+        return right + 1
 
     def searchInsertNotGood(self, nums: List[int], target: int) -> int:
         for idx, num in enumerate(nums):
