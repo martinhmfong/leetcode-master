@@ -1,6 +1,8 @@
 
 # 力扣上如何自己构造二叉树输入用例？
 
+**这里给大家推荐ACM模式练习网站**：[kamacoder.com](https://kamacoder.com)，把上面的题目刷完，ACM模式就没问题了。
+
 经常有录友问，二叉树的题目中输入用例在ACM模式下应该怎么构造呢？
 
 力扣上的题目，输入用例就给了一个数组，怎么就能构造成二叉树呢？
@@ -57,11 +59,18 @@ TreeNode* construct_binary_tree(const vector<int>& vec) {
         if (i == 0) root = node;
     }
     // 遍历一遍，根据规则左右孩子赋值就可以了
-    // 注意这里 结束规则是 i * 2 + 2 < vec.size()，避免空指针
-    for (int i = 0; i * 2 + 2 < vec.size(); i++) {
+    // 注意这里 结束规则是 i * 2 + 1 < vec.size()，避免空指针
+    // 为什么结束规则不能是i * 2 + 2 < arr.length呢?
+    // 如果i * 2 + 2 < arr.length 是结束条件
+    // 那么i * 2 + 1这个符合条件的节点就被忽略掉了
+    // 例如[2,7,9,-1,1,9,6,-1,-1,10] 这样的一个二叉树,最后的10就会被忽略掉
+    // 遍历一遍，根据规则左右孩子赋值就可以了
+           
+    for (int i = 0; i * 2 + 1 < vec.size(); i++) {
         if (vecTree[i] != NULL) {
             // 线性存储转连式存储关键逻辑
             vecTree[i]->left = vecTree[i * 2 + 1];
+            if(i * 2 + 2 < vec.size())
             vecTree[i]->right = vecTree[i * 2 + 2];
         }
     }
@@ -114,9 +123,10 @@ TreeNode* construct_binary_tree(const vector<int>& vec) {
         vecTree[i] = node;
         if (i == 0) root = node;
     }
-    for (int i = 0; i * 2 + 2 < vec.size(); i++) {
+    for (int i = 0; i * 2 + 1 < vec.size(); i++) {
         if (vecTree[i] != NULL) {
             vecTree[i]->left = vecTree[i * 2 + 1];
+            if(i * 2 + 2 < vec.size())
             vecTree[i]->right = vecTree[i * 2 + 2];
         }
     }
@@ -213,7 +223,7 @@ public class Solution {
     static class TreeNode {
         // 节点值
         int val;
-
+        
         // 左节点
         TreeNode left;
 
@@ -249,12 +259,18 @@ public class Solution {
             }
         }
         // 遍历一遍，根据规则左右孩子赋值就可以了
-        // 注意这里 结束规则是 i * 2 + 2 < arr.length，避免空指针
-        for (int i = 0; i * 2 + 2 < arr.length; i++) {
+        // 注意这里 结束规则是 i * 2 + 1 < arr.length，避免空指针
+        // 为什么结束规则不能是i * 2 + 2 < arr.length呢?
+        // 如果i * 2 + 2 < arr.length 是结束条件
+        // 那么i * 2 + 1这个符合条件的节点就被忽略掉了
+        // 例如[2,7,9,-1,1,9,6,-1,-1,10] 这样的一个二叉树,最后的10就会被忽略掉
+        for (int i = 0; i * 2 + 1 < arr.length; i++) {
             TreeNode node = treeNodeList.get(i);
             if (node != null) {
                 // 线性存储转连式存储关键逻辑
                 node.left = treeNodeList.get(2 * i + 1);
+                //  再次判断下 不忽略任何一个节点
+                if(i * 2 + 2 < arr.length)
                 node.right = treeNodeList.get(2 * i + 2);
             }
         }
@@ -266,7 +282,7 @@ public class Solution {
 
 ## Python 
 
-```Python3
+```Python
 class TreeNode:
     def __init__(self, val = 0, left = None, right = None):
         self.val = val
@@ -291,11 +307,12 @@ def construct_binary_tree(nums: []) -> TreeNode:
         Tree.append(node)
         if i == 0:
             root = node
+    # 直接判断2*i+2<len(Tree)会漏掉2*i+1=len(Tree)-1的情况
     for i in range(len(Tree)):
-        node = Tree[i]
-        if node and (2 * i + 2) < len(Tree):
-            node.left = Tree[i * 2 + 1]
-            node.right = Tree[i * 2 + 2]
+        if Tree[i] and 2 * i + 1 < len(Tree):
+            Tree[i].left = Tree[2 * i + 1]
+            if 2 * i + 2 < len(Tree):
+                Tree[i].right = Tree[2 * i + 2]
     return root
 
 
